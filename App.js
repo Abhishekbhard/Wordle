@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,15 +8,27 @@ import { colors } from "./src/constants";
 
 const NUMBER_OF_TRIES = 6;
 
+const copyArray = (arr) => {
+    return [...arr.map((rows) => [...rows])];
+};
+
 export default function App() {
     const word = "hello";
     const letters = word.split(""); //['h','e','l','l','o']
-    const rows = new Array(NUMBER_OF_TRIES).fill(
-        new Array(letters.length).fill("a")
+    const [rows, setRows] = useState(
+        new Array(NUMBER_OF_TRIES).fill(new Array(letters.length).fill(""))
     );
+    const [curRow, setCurrRow] = useState(0);
+    const [curCol, setCurCol] = useState(0);
 
     const onKeyPressed = (key) => {
-        console.warn(key);
+        const updatedRows = copyArray(rows);
+        //console.warn(updatedRows);
+        updatedRows[curRow][curCol] = key;
+        setCurCol(curCol + 1);
+        setRows(updatedRows);
+
+        //setRow([[]]);
     };
     //console.log(rows);
     return (
