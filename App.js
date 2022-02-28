@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Keyboard from "./src/components/Keyboard";
 
-import { colors } from "./src/constants";
+import { colors, CLEAR } from "./src/constants";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -24,11 +24,21 @@ export default function App() {
     const onKeyPressed = (key) => {
         const updatedRows = copyArray(rows);
         //console.warn(updatedRows);
-        updatedRows[curRow][curCol] = key;
-        setCurCol(curCol + 1);
-        setRows(updatedRows);
+        if (key === CLEAR) {
+            setCurrRow(0);
+            setCurCol(0);
+            return;
+        }
+        if (curCol < rows[0].length) {
+            updatedRows[curRow][curCol] = key;
+            setCurCol(curCol + 1);
+            setRows(updatedRows);
+        }
 
         //setRow([[]]);
+    };
+    const isCellActive = (row, col) => {
+        return row === curRow && col === curCol;
     };
     //console.log(rows);
     return (
@@ -36,10 +46,20 @@ export default function App() {
             <StatusBar style="light" />
             <Text style={styles.title}>WORDLE</Text>
             <ScrollView style={styles.map}>
-                {rows.map((row) => (
-                    <View style={styles.row}>
-                        {row.map((cell) => (
-                            <View style={styles.cell}>
+                {rows.map((row, i) => (
+                    <View key={`row${i}`} style={styles.row}>
+                        {row.map((cell, j) => (
+                            <View
+                                key={`col${j}`}
+                                style={[
+                                    styles.cell,
+                                    {
+                                        borderColor: isCellActive(i, j)
+                                            ? colors.lightgrey
+                                            : colors.darkgrey,
+                                    },
+                                ]}
+                            >
                                 <Text style={styles.cellText}>
                                     {cell.toUpperCase()}
                                 </Text>
