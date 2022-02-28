@@ -25,8 +25,10 @@ export default function App() {
         const updatedRows = copyArray(rows);
         //console.warn(updatedRows);
         if (key === CLEAR) {
-            setCurrRow(0);
-            setCurCol(0);
+            let prevCol = curCol - 1;
+            updatedRows[curRow][prevCol] = "";
+            setRows(updatedRows);
+            setCurCol(prevCol);
             return;
         }
         if (curCol < rows[0].length) {
