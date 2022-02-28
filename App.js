@@ -26,9 +26,12 @@ export default function App() {
         //console.warn(updatedRows);
         if (key === CLEAR) {
             let prevCol = curCol - 1;
-            updatedRows[curRow][prevCol] = "";
-            setRows(updatedRows);
-            setCurCol(prevCol);
+            if (prevCol >= 0) {
+                updatedRows[curRow][prevCol] = "";
+                setRows(updatedRows);
+                setCurCol(prevCol);
+            }
+
             return;
         }
         if (curCol < rows[0].length) {
