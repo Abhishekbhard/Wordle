@@ -94,12 +94,12 @@ export default function App() {
 
     const checkGameState = () => {
         // console.log("check Game State Got called");
-        if (checkIfWon()) {
+        if (checkIfWon() && gameState == !"Won") {
             Alert.alert("Hurraaay", "You Won", [
                 { text: "Share", onPress: shareScore },
             ]);
             setGameState("Won");
-        } else if (checkIfLost()) {
+        } else if (checkIfLost() && gameState != "Lost") {
             Alert.alert("Meh", "Try again tomorrow!");
             setGameState("Lost");
         }
@@ -126,7 +126,7 @@ export default function App() {
         return row.every((letter, i) => letter === letters[i]);
     };
     const checkIfLost = () => {
-        return curRow === rows.length;
+        return !checkIfWon() && curRow === rows.length;
     };
 
     // console.log(greenCaps);
