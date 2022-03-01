@@ -19,9 +19,98 @@ const NUMBER_OF_TRIES = 6;
 const copyArray = (arr) => {
     return [...arr.map((rows) => [...rows])];
 };
+const getDayOfTheyear = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const day = Math.floor(diff / oneDay);
+    console.log(day);
+    return day;
+};
+const dayOfTheYear = getDayOfTheyear();
 
+const words = [
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+    "hello",
+    "world",
+];
 export default function App() {
-    const word = "hello";
+    const word = words[dayOfTheYear];
     const letters = word.split(""); //['h','e','l','l','o']
     const [rows, setRows] = useState(
         new Array(NUMBER_OF_TRIES).fill(new Array(letters.length).fill(""))
