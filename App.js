@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Keyboard from "./src/components/Keyboard";
 
 import { colors, CLEAR, ENTER } from "./src/constants";
+import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -35,7 +36,7 @@ export default function App() {
             return;
         }
         if (key === ENTER) {
-            console.log(rows[0].length);
+            //console.log(rows[0].length);
             if (curCol === rows[0].length) {
                 setCurrRow(curRow + 1);
                 setCurCol(0);
@@ -53,6 +54,18 @@ export default function App() {
     const isCellActive = (row, col) => {
         return row === curRow && col === curCol;
     };
+    const getCellBackgrouncColor = (letter, row, col) => {
+        if (row >= curRow) {
+            return colors.black;
+        }
+        if (letter === letters[col]) {
+            return colors.primary;
+        }
+        if (letters.includes(letter)) {
+            return colors.secondary;
+        }
+        return colors.darkgrey;
+    };
     //console.log(rows);
     return (
         <SafeAreaView style={styles.container}>
@@ -61,7 +74,7 @@ export default function App() {
             <ScrollView style={styles.map}>
                 {rows.map((row, i) => (
                     <View key={`row${i}`} style={styles.row}>
-                        {row.map((cell, j) => (
+                        {row.map((letter, j) => (
                             <View
                                 key={`col${j}`}
                                 style={[
@@ -70,11 +83,16 @@ export default function App() {
                                         borderColor: isCellActive(i, j)
                                             ? colors.lightgrey
                                             : colors.darkgrey,
+                                        backgroundColor: getCellBackgrouncColor(
+                                            letter,
+                                            i,
+                                            j
+                                        ),
                                     },
                                 ]}
                             >
                                 <Text style={styles.cellText}>
-                                    {cell.toUpperCase()}
+                                    {letter.toUpperCase()}
                                 </Text>
                             </View>
                         ))}
