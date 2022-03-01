@@ -8,11 +8,11 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Keyboard from "./src/components/Keyboard";
 
-import { colors, CLEAR, ENTER } from "./src/constants";
-import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
+import { colors, CLEAR, ENTER, colorsToEmoji } from "./src/constants";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -28,8 +28,12 @@ export default function App() {
     );
     const [curRow, setCurrRow] = useState(0);
     const [curCol, setCurCol] = useState(0);
+    const [gameState, setGameState] = useState("Playing");
 
     const onKeyPressed = (key) => {
+        if (gameState == !"Playing") {
+            return;
+        }
         const updatedRows = copyArray(rows);
         //console.warn(updatedRows);
         if (key === CLEAR) {
@@ -89,12 +93,32 @@ export default function App() {
     }, [curRow]);
 
     const checkGameState = () => {
-        console.log("check Game State Got called");
+        // console.log("check Game State Got called");
         if (checkIfWon()) {
-            Alert.alert("Hurraaay", "You Won");
+            Alert.alert("Hurraaay", "You Won", [
+                { text: "Share", onPress: shareScore },
+            ]);
+            setGameState("Won");
         } else if (checkIfLost()) {
             Alert.alert("Meh", "Try again tomorrow!");
+            setGameState("Lost");
         }
+    };
+    const shareScore = () => {
+        const textMap = rows
+            .map((row, i) =>
+                row
+                    .map(
+                        (cell, j) => colorsToEmoji[getCellBackgrouncColor(i, j)]
+                    )
+                    .join("")
+            )
+            .filter((row) => row)
+            .join("\n");
+        let textToShare = `Wordle \n ${textMap}`;
+        Clipboard.setString(textToShare);
+        Alert.alert("Copied Successfully", "Share your code on social media");
+        // console.log(textShare);
     };
     const checkIfWon = () => {
         const row = rows[curRow - 1];
