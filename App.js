@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Keyboard from "./src/components/Keyboard";
 
-import { colors, CLEAR } from "./src/constants";
+import { colors, CLEAR, ENTER } from "./src/constants";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -32,6 +32,14 @@ export default function App() {
                 setCurCol(prevCol);
             }
 
+            return;
+        }
+        if (key === ENTER) {
+            console.log(rows[0].length);
+            if (curCol === rows[0].length) {
+                setCurrRow(curRow + 1);
+                setCurCol(0);
+            }
             return;
         }
         if (curCol < rows[0].length) {
