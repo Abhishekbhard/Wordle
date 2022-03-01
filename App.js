@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Platform, ScrollView } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    Platform,
+    ScrollView,
+    Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Keyboard from "./src/components/Keyboard";
 
@@ -54,7 +61,8 @@ export default function App() {
     const isCellActive = (row, col) => {
         return row === curRow && col === curCol;
     };
-    const getCellBackgrouncColor = (letter, row, col) => {
+    const getCellBackgrouncColor = (row, col) => {
+        let letter = rows[row][col];
         if (row >= curRow) {
             return colors.black;
         }
@@ -66,6 +74,38 @@ export default function App() {
         }
         return colors.darkgrey;
     };
+    const getAllLettersWithColors = (color) => {
+        return rows.flatMap((row, i) =>
+            row.filter((cell, j) => getCellBackgrouncColor(i, j) === color)
+        );
+    };
+    const greenCaps = getAllLettersWithColors(colors.primary);
+    const yellowCaps = getAllLettersWithColors(colors.secondary);
+    const blackCaps = getAllLettersWithColors(colors.darkgrey);
+    useEffect(() => {
+        if (curRow > 0) {
+            checkGameState();
+        }
+    }, [curRow]);
+
+    const checkGameState = () => {
+        console.log("check Game State Got called");
+        if (checkIfWon()) {
+            Alert.alert("Hurraaay", "You Won");
+        } else if (checkIfLost()) {
+            Alert.alert("Meh", "Try again tomorrow!");
+        }
+    };
+    const checkIfWon = () => {
+        const row = rows[curRow - 1];
+
+        return row.every((letter, i) => letter === letters[i]);
+    };
+    const checkIfLost = () => {
+        return curRow === rows.length;
+    };
+
+    // console.log(greenCaps);
     //console.log(rows);
     return (
         <SafeAreaView style={styles.container}>
@@ -84,7 +124,6 @@ export default function App() {
                                             ? colors.lightgrey
                                             : colors.darkgrey,
                                         backgroundColor: getCellBackgrouncColor(
-                                            letter,
                                             i,
                                             j
                                         ),
@@ -100,7 +139,12 @@ export default function App() {
                 ))}
             </ScrollView>
 
-            <Keyboard onKeyPressed={onKeyPressed} />
+            <Keyboard
+                onKeyPressed={onKeyPressed}
+                greenCaps={greenCaps}
+                yellowCaps={yellowCaps}
+                greyCaps={blackCaps}
+            />
         </SafeAreaView>
     );
 }
