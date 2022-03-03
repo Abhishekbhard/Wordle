@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import {
-    StyleSheet,
-    Text,
-    View,
-    Platform,
-    ScrollView,
-    Alert,
-} from "react-native";
+import { StyleSheet, Text, View, ScrollView, Alert } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Keyboard from "./src/components/Keyboard";
+import Keyboard from "../Keyboard";
+import words from "../../words";
+import styles from "./Game.styles";
 
-import { colors, CLEAR, ENTER, colorsToEmoji } from "./src/constants";
+import { colors, CLEAR, ENTER, colorsToEmoji } from "../../constants";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -30,85 +23,6 @@ const getDayOfTheyear = () => {
 };
 const dayOfTheYear = getDayOfTheyear();
 
-const words = [
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-    "hello",
-    "world",
-];
 const Game = () => {
     const word = words[dayOfTheYear];
     const letters = word.split(""); //['h','e','l','l','o']
@@ -222,7 +136,6 @@ const Game = () => {
     //console.log(rows);
     return (
         <>
-            {" "}
             <ScrollView style={styles.map}>
                 {rows.map((row, i) => (
                     <View key={`row${i}`} style={styles.row}>
@@ -260,42 +173,4 @@ const Game = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.black,
-        alignItems: "center",
-    },
-    title: {
-        color: colors.lightgrey,
-        fontSize: 32,
-        fontWeight: "bold",
-        letterSpacing: 7,
-    },
-    map: {
-        alignSelf: "stretch",
-        height: 100,
-    },
-    row: {
-        flexDirection: "row",
-        alignSelf: "stretch",
-        justifyContent: "center",
-    },
-    cell: {
-        flex: 1,
-        height: 30,
-        borderWidth: 1,
-        borderColor: colors.grey,
-        aspectRatio: 1,
-        margin: 3,
-        maxWidth: 70,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    cellText: {
-        color: colors.lightgrey,
-        fontWeight: "bold",
-        fontSize: 28,
-    },
-});
 export default Game;

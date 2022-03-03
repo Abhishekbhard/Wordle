@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Game from "./src/components/game";
 
 import { colors } from "./src/constants";
 
@@ -10,6 +10,7 @@ export default function App() {
         <SafeAreaView style={styles.container}>
             <StatusBar style="light" />
             <Text style={styles.title}>WORDLE</Text>
+            <Game />
         </SafeAreaView>
     );
 }
