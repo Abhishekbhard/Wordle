@@ -15,6 +15,7 @@ import { copyArray, getDayOfTheyear, getDayKey } from "../../utils";
 
 import { colors, CLEAR, ENTER, colorsToEmoji } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EndScreen from "../EndScreen";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -57,7 +58,7 @@ const Game = () => {
     const [loaded, setLoaded] = useState(false);
 
     const onKeyPressed = (key) => {
-        if (gameState == !"Playing") {
+        if (gameState != "Playing") {
             return;
         }
         const updatedRows = copyArray(rows);
@@ -166,33 +167,13 @@ const Game = () => {
         setLoaded(true);
     };
     const checkGameState = () => {
-        // console.log("check Game State Got called");
         if (checkIfWon() && gameState != "Won") {
-            Alert.alert("Hurraaay", "You Won", [
-                { text: "Share", onPress: shareScore },
-            ]);
             setGameState("Won");
         } else if (checkIfLost() && gameState != "Lost") {
-            Alert.alert("Meh", "Try again tomorrow!");
             setGameState("Lost");
         }
     };
-    const shareScore = () => {
-        const textMap = rows
-            .map((row, i) =>
-                row
-                    .map(
-                        (cell, j) => colorsToEmoji[getCellBackgrouncColor(i, j)]
-                    )
-                    .join("")
-            )
-            .filter((row) => row)
-            .join("\n");
-        let textToShare = `Wordle \n ${textMap}`;
-        Clipboard.setString(textToShare);
-        Alert.alert("Copied Successfully", "Share your code on social media");
-        // console.log(textShare);
-    };
+
     const checkIfWon = () => {
         const row = rows[curRow - 1];
 
@@ -208,6 +189,15 @@ const Game = () => {
                 <ActivityIndicator />
             </>
         );
+    if (gameState != "Playing") {
+        return (
+            <EndScreen
+                gameState={gameState === "won"}
+                rows={rows}
+                getCellBackgrouncColor={getCellBackgrouncColor}
+            />
+        );
+    }
     // console.log(greenCaps);
     //console.log(rows);
     return (
