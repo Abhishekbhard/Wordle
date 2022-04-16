@@ -7,7 +7,6 @@ import {
     Alert,
     ActivityIndicator,
 } from "react-native";
-import * as Clipboard from "expo-clipboard";
 import Keyboard from "../Keyboard";
 import words from "../../words";
 import styles from "./Game.styles";
@@ -44,8 +43,8 @@ const dayKey = getDayKey();
 // }
 
 const Game = () => {
-    AsyncStorage.removeItem("@Game");
-    console.log(dayOfTheYear);
+    // AsyncStorage.removeItem("@Game");
+    //console.log(dayOfTheYear);
     const word = words[dayOfTheYear];
 
     const letters = word.split(""); //['h','e','l','l','o']
@@ -140,7 +139,7 @@ const Game = () => {
 
             const dataString = JSON.stringify(existingState);
             await AsyncStorage.setItem("@Game", dataString);
-            console.log("Saving", dataString);
+            //console.log("Saving", dataString);
         } catch (error) {
             console.log("Failed to save data in async storage", error);
         }
@@ -190,9 +189,10 @@ const Game = () => {
             </>
         );
     if (gameState != "Playing") {
+        console.log(gameState);
         return (
             <EndScreen
-                gameState={gameState === "won"}
+                won={gameState === "Won"}
                 rows={rows}
                 getCellBackgrouncColor={getCellBackgrouncColor}
             />

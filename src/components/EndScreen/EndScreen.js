@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import { colors, colorsToEmoji } from "../../constants";
 import * as Clipboard from "expo-clipboard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Number = ({ number, label }) => {
     return (
@@ -66,6 +67,11 @@ const GuessDistribution = () => {
 
 const EndScreen = ({ won = false, rows, getCellBackgrouncColor }) => {
     const [secondTilTommorrow, setSecondTilTomorrow] = useState(0);
+    const [played, setPlayed] = useState(0);
+    const [winRate, setWinRate] = useState(0);
+    const [curStreak, setCurrStreak] = useState(0);
+    const [maxStreak, setMaxStreak] = useState(0);
+    //console.log(won);
     const share = () => {
         const textMap = rows
             .map((row, i) =>
@@ -95,6 +101,45 @@ const EndScreen = ({ won = false, rows, getCellBackgrouncColor }) => {
         const interval = setInterval(updateTime, 1000);
         return () => clearInterval(interval);
     }, []);
+    useEffect(() => {
+        readState();
+    }, []);
+    const readState = async () => {
+        const dataString = await AsyncStorage.getItem("@Game");
+        let data;
+        try {
+            data = JSON.parse(dataString);
+            //const day = data[dayKey];
+            // console.log(data[dayKey]);
+            // console.log(data);
+            // setPlayed(data)
+            //console.log(data);
+            // console.log(Object.keys(data));
+        } catch (error) {
+            console.log("Could not parse the state", error);
+        }
+        const keys = Object.keys(data);
+        const values = Object.values(data);
+        //console.log(values);
+        setPlayed(keys.length);
+        const numberOfWins = values.filter(
+            (game) => game.gameState === "Won"
+        ).length;
+
+        setWinRate(Math.floor((100 * numberOfWins) / keys.length));
+        //console.log(keys);
+        let currStreak = 0;
+        keys.forEach((key) => {
+            // console.log("this");
+            if (data[key].gameState === "Won") {
+                currStreak += 1;
+            } else {
+                currStreak = 0;
+            }
+        });
+        setCurrStreak(currStreak);
+        // console.log(data);
+    };
 
     const formatSecond = () => {
         const hours = Math.floor(secondTilTommorrow / (60 * 60));
@@ -115,10 +160,10 @@ const EndScreen = ({ won = false, rows, getCellBackgrouncColor }) => {
                     marginBottom: 20,
                 }}
             >
-                <Number number={2} label={"Played"} />
-                <Number number={2} label={"Win %"} />
-                <Number number={2} label={"Curr Streak"} />
-                <Number number={2} label={"Max Streak"} />
+                <Number number={played} label={"Played"} />
+                <Number number={winRate} label={"Win %"} />
+                <Number number={curStreak} label={"Curr Streak"} />
+                <Number number={maxStreak} label={"Max Streak"} />
             </View>
             <GuessDistribution />
             <View style={{ flexDirection: "row", padding: 10 }}>
