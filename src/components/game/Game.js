@@ -15,6 +15,12 @@ import { copyArray, getDayOfTheyear, getDayKey } from "../../utils";
 import { colors, CLEAR, ENTER, colorsToEmoji } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EndScreen from "../EndScreen";
+import Animated, {
+    SlideInDown,
+    SlideInLeft,
+    ZoomIn,
+    FlipInEasyY,
+} from "react-native-reanimated";
 
 const NUMBER_OF_TRIES = 6;
 
@@ -153,6 +159,7 @@ const Game = () => {
         try {
             const data = JSON.parse(dataString);
             const day = data[dayKey];
+            //");
             // console.log(data[dayKey]);
             // console.log(data);
             setRows(day.rows);
@@ -199,35 +206,63 @@ const Game = () => {
             />
         );
     }
+    const getCellStyle = (i, j) => [
+        styles.cell,
+        {
+            borderColor: isCellActive(i, j)
+                ? colors.lightgrey
+                : colors.darkgrey,
+            backgroundColor: getCellBackgrouncColor(i, j),
+        },
+    ];
     // console.log(greenCaps);
     //console.log(rows);
     return (
         <>
             <ScrollView style={styles.map}>
                 {rows.map((row, i) => (
-                    <View key={`row${i}`} style={styles.row}>
+                    <Animated.View
+                        entering={SlideInLeft.delay(i * 30)}
+                        key={`row${i}`}
+                        style={styles.row}
+                    >
                         {row.map((letter, j) => (
-                            <View
-                                key={`col${j}`}
-                                style={[
-                                    styles.cell,
-                                    {
-                                        borderColor: isCellActive(i, j)
-                                            ? colors.lightgrey
-                                            : colors.darkgrey,
-                                        backgroundColor: getCellBackgrouncColor(
-                                            i,
-                                            j
-                                        ),
-                                    },
-                                ]}
-                            >
-                                <Text style={styles.cellText}>
-                                    {letter.toUpperCase()}
-                                </Text>
-                            </View>
+                            <>
+                                {i < curRow && (
+                                    <Animated.View
+                                        entering={FlipInEasyY.delay(j * 100)}
+                                        key={`cell-color${i}-${j}`}
+                                        style={getCellStyle(i, j)}
+                                    >
+                                        <Text style={styles.cellText}>
+                                            {letter.toUpperCase()}
+                                        </Text>
+                                    </Animated.View>
+                                )}
+                                {i === curRow && !!letter && (
+                                    <Animated.View
+                                        entering={ZoomIn}
+                                        key={`cell-active${i}-${j}`}
+                                        style={getCellStyle(i, j)}
+                                    >
+                                        <Text style={styles.cellText}>
+                                            {letter.toUpperCase()}
+                                        </Text>
+                                    </Animated.View>
+                                )}
+                                {!letter && (
+                                    <View
+                                        key={`col${i}-${j}`}
+                                        style={getCellStyle(i, j)}
+                                    >
+                                        <Text style={styles.cellText}>
+                                            {letter.toUpperCase()}
+                                        </Text>
+                                    </View>
+                                )}
+                            </>
                         ))}
-                    </View>
+                    </Animated.View>
                 ))}
             </ScrollView>
             <Keyboard
