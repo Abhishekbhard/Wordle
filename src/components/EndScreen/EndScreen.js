@@ -128,16 +128,28 @@ const EndScreen = ({ won = false, rows, getCellBackgrouncColor }) => {
 
         setWinRate(Math.floor((100 * numberOfWins) / keys.length));
         //console.log(keys);
-        let currStreak = 0;
+        let _currStreak = 0;
+        let prevDay = 0;
+        let maxStreak = 0;
         keys.forEach((key) => {
             // console.log("this");
-            if (data[key].gameState === "Won") {
-                currStreak += 1;
+            //cl console.log(key);
+            const day = parseInt(key.split("-")[1]);
+
+            if (data[key].gameState === "Won" && _currStreak === 0) {
+                _currStreak += 1;
+            } else if (data[key].gameState === "Won" && prevDay + 1 === day) {
+                _currStreak += 1;
             } else {
-                currStreak = 0;
+                if (_currStreak > maxStreak) {
+                    maxStreak = _currStreak;
+                }
+                _currStreak = data[key].gameState === "Won" ? 1 : 0;
             }
+            prevDay = day;
         });
-        setCurrStreak(currStreak);
+        setCurrStreak(_currStreak);
+        setMaxStreak(maxStreak);
         // console.log(data);
     };
 

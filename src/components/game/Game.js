@@ -46,6 +46,7 @@ const Game = () => {
     // AsyncStorage.removeItem("@Game");
     //console.log(dayOfTheYear);
     const word = words[dayOfTheYear];
+    console.log(dayOfTheYear);
 
     const letters = word.split(""); //['h','e','l','l','o']
     const [rows, setRows] = useState(
@@ -188,7 +189,7 @@ const Game = () => {
                 <ActivityIndicator />
             </>
         );
-    if (gameState != "Playing") {
+    if (gameState !== "Playing") {
         console.log(gameState);
         return (
             <EndScreen
